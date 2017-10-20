@@ -15,25 +15,25 @@ There are several parts of your code that do generally deserve comments:
 
 ### 2 Good Use of Whitespace
 
-Proper use of whitespace can greatly increase the readability of code. Every time you open a block of code (a function, “`if`”statement, “`for`” or “`while`” loop, etc.), you should indent one additional level.
+Proper use of whitespace can greatly increase the readability of code. Every time you open a block of code (a function, “`if`” statement, “`for`” or “`while`” loop, etc.), you should indent one additional level.
 
 You are free to use your own indent style, but you must be consistent: if you use four spaces as an indentin some places, you should not use a tab elsewhere.
 
-### 3 LineLength
+### 3 Line Length
 
 While there are many different standards for line length, we require that your lines be no longer than 80 characters, so we can easily view and print your code. If you indent with tabs please assume a tab size of 4 characters when calculating line lengths. To quickly check that `file.c` does not exceed 80 characters, run “`wc -L file.c`” to see its maxline length.
 
-### 4 GoodVariable Names
+### 4 Good Variable Names
 
 Variable names should be descriptive of the value stored inthem. Local variables whose purpose is self-evident (e.g. loop counters or array indices) can be single letters. Parameters can be one (well-chosen) word. Global variables should probably be two or more words.
 
-Multiple-word variables should be formatted consistently, both within and across variables. For example, “`hashtable_array_size`” or “`hashtableArraySize`” are both okay, but “`hashtable_arraySize`”is not. And if you were to use “`hashtable_array_size`” in one place, using “`hashtableArray`” somewhere else would not be okay.
+Multiple-word variables should be formatted consistently, both within and across variables. For example, “`hashtable_array_size`” or “`hashtableArraySize`” are both okay, but “`hashtable_arraySize`” is not. And if you were to use “`hashtable_array_size`” in one place, using “`hashtableArray`” somewhere else would not be okay.
 
-###5 Magic Numbers
+### 5 Magic Numbers
 
-Magic numbers are numbers in your code that have more meaning than simply their own values. For example, if you are reading data intoa buffer by doing “`fgets(stdin,buf, 256)`”, 256 is a “*magic number*”because it represents the length of your buffer. On the other hand, if you were counting by even numbers by doing “`for(int i = 0; i < MAX; i += 2)`”, 2 is not a magic number, because its imply means that you are counting by 2s.
+Magic numbers are numbers in your code that have more meaning than simply their own values. For example, if you are reading data intoa buffer by doing “`fgets(stdin, buf, 256)`”, 256 is a “*magic number*” because it represents the length of your buffer. On the other hand, if you were counting by even numbers by doing “`for(int i = 0; i < MAX; i += 2)`”, 2 is not a magic number, because its imply means that you are counting by 2s.
 
-You should use `#define` to clarify the meaning of magic numbers. In the above example, doing “`#define BUFLEN 256`” and then using the “`BUFLEN`”constant in both the declaration of “`buf`”and the call to “`fgets`”.
+You should use `#define` to clarify the meaning of magic numbers. In the above example, doing “`#define BUFLEN 256`” and then using the “`BUFLEN`” constant in both the declaration of “`buf`” and the call to “`fgets`”.
 
 ### 6 No“Dead Code”
 
@@ -55,5 +55,5 @@ If you allocate memory (`malloc`, `calloc`), you should free it after use. Your 
 
 ### 10 Consistency
 
-This style guide purpose fully leaves many choices up to you (for example, where the curly braces go, whether one-line “if” statements need braces, how far to indent each level). It is important that, whatever choices you make, you remain consistent about them. Nothing is more distracting to someone reading your code than random style changes.
+This style guide purpose fully leaves many choices up to you (for example, where the curly braces go, whether one-line “`if`” statements need braces, how far to indent each level). It is important that, whatever choices you make, you remain consistent about them. Nothing is more distracting to someone reading your code than random style changes.
 
