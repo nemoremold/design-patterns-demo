@@ -4,7 +4,7 @@
 #include <cstddef>
 #include <functional>
 
-namespace {
+namespace dp {
 
 template <typename T>
 class shared_ptr {

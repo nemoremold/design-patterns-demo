@@ -3,7 +3,7 @@
 
 #include <cstddef>
 
-namespace {
+namespace dp {
 
 template <typename TV>
 class vector {
