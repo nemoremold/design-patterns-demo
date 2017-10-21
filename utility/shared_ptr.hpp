@@ -13,9 +13,7 @@ public:
     using deleter_t = std::function<void (T *)>;
 
     // default ctor
-    explicit shared_ptr(T *t, deleter_t d = [](T *t){ delete t; }) : t(t), count(new size_t(1)), deleter(d) {
-
-    }
+    explicit shared_ptr(T *t, deleter_t d = [](T *t){ delete t; }) : t(t), count(new size_t(1)), deleter(d) { }
 
     // copy ctor
     shared_ptr(const shared_ptr &sp) : count(sp.count), t(sp.t), deleter(sp.deleter) {
@@ -23,9 +21,7 @@ public:
     }
 
     // move ctor
-    shared_ptr(const shared_ptr &&sp) : count(sp.count), t(sp.t), deleter(std::move(sp.deleter)) {
-        sp.t = nullptr;
-    }
+    shared_ptr(const shared_ptr &&sp) : count(sp.count), t(sp.t), deleter(std::move(sp.deleter)) { }
 
     // dtor
     inline ~shared_ptr(void) {
