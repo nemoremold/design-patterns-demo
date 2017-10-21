@@ -2,6 +2,7 @@
 
 #include "log.hpp"
 #include "car_factory.hpp"
+#include "service_platform.hpp"
 
 #include <string>
 #include <iostream>
@@ -31,6 +32,17 @@ int main(void) {
     log.addNew(std::string("test1"));
     log.addNew(std::string("test2"));
     log.showAll();
+
+    ServicePlatformDirector director;
+    BenzServicePlatformBuilder benzServicePlatformBuilder;
+    director.setBuilder(&benzServicePlatformBuilder);
+    director.construct();
+    BmwServicePlatformBuilder bmwServicePlatformBuilder;
+    director.setBuilder(&bmwServicePlatformBuilder);
+    director.construct();
+    AudiServicePlatformBuilder audiServicePlatformBuilder;
+    director.setBuilder(&audiServicePlatformBuilder);
+    director.construct();
 
     return 0;
 }
