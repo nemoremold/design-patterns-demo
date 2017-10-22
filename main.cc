@@ -1,8 +1,11 @@
 #include "utility/shared_ptr.hpp"
 
 #include "log.hpp"
+#include "toolbox.hpp"
 #include "car_factory.hpp"
+#include "service_platform.hpp"
 
+#include <memory>
 #include <string>
 #include <iostream>
 
@@ -31,6 +34,15 @@ int main(void) {
     log.addNew(std::string("test1"));
     log.addNew(std::string("test2"));
     log.showAll();
+
+    ServicePlatformDirector director;
+    director.setBuilder(std::unique_ptr<BenzServicePlatformBuilder>(new BenzServicePlatformBuilder));
+    director.construct();
+    BmwServicePlatformBuilder bmwServicePlatformBuilder;
+    director.setBuilder(std::unique_ptr<BmwServicePlatformBuilder>(new BmwServicePlatformBuilder));
+    director.construct();
+    director.setBuilder(std::unique_ptr<AudiServicePlatformBuilder>(new AudiServicePlatformBuilder));
+    director.construct();
 
     return 0;
 }
