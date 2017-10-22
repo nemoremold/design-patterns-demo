@@ -24,10 +24,20 @@ public:
         std::cout << "Setting helper: " << helper << std::endl;
     }
 
+    void setToolbox(std::shared_ptr<Tool> toolbox) {
+        _toolbox = std::move(toolbox);
+        std::cout << "Setting toolbox..." << std::endl;
+    }
+
+    std::shared_ptr<Tool> getToolbox() {
+        return _toolbox;
+    }
+
 private:
     std::string _type;
     std::string _maintainer;
     std::string _helper;
+    std::shared_ptr<Tool> _toolbox;
 };
 
 class Builder {
@@ -60,7 +70,20 @@ public:
     }
 
     void configureToolbox() {
-
+        std::shared_ptr<Tool> spanner(new Spanner());
+        std::shared_ptr<Tool> screwdriver(new Screwdriver());
+        std::shared_ptr<Tool> pincher(new Pincher());
+        std::shared_ptr<Tool> smallToolbox(new Toolbox());
+    
+        std::dynamic_pointer_cast<Toolbox>(smallToolbox)->add(spanner);
+        std::dynamic_pointer_cast<Toolbox>(smallToolbox)->add(screwdriver);
+    
+        std::shared_ptr<Tool> largeToolbox(new Toolbox());
+        std::dynamic_pointer_cast<Toolbox>(largeToolbox)->add(pincher);
+        std::dynamic_pointer_cast<Toolbox>(largeToolbox)->add(smallToolbox);
+    
+        getServicePlatform().setToolbox(largeToolbox);
+        getServicePlatform().getToolbox()->exert();
     }
 };
 
@@ -79,7 +102,24 @@ public:
     }
 
     void configureToolbox() {
-
+        std::shared_ptr<Tool> spanner(new Spanner());
+        std::shared_ptr<Tool> screwdriver(new Screwdriver());
+        std::shared_ptr<Tool> pincher(new Pincher());
+        std::shared_ptr<Tool> smallToolbox1(new Toolbox());
+        std::shared_ptr<Tool> smallToolbox2(new Toolbox());
+    
+        std::dynamic_pointer_cast<Toolbox>(smallToolbox1)->add(screwdriver);
+        std::dynamic_pointer_cast<Toolbox>(smallToolbox1)->add(pincher);
+        std::dynamic_pointer_cast<Toolbox>(smallToolbox2)->add(pincher);
+        std::dynamic_pointer_cast<Toolbox>(smallToolbox2)->add(spanner);
+    
+        std::shared_ptr<Tool> largeToolbox(new Toolbox());
+        std::dynamic_pointer_cast<Toolbox>(largeToolbox)->add(smallToolbox1);
+        std::dynamic_pointer_cast<Toolbox>(largeToolbox)->add(smallToolbox2);
+        std::dynamic_pointer_cast<Toolbox>(largeToolbox)->add(spanner);
+    
+        getServicePlatform().setToolbox(largeToolbox);
+        getServicePlatform().getToolbox()->exert();
     }
 };
 
@@ -98,7 +138,17 @@ public:
     }
 
     void configureToolbox() {
-
+        std::shared_ptr<Tool> spanner(new Spanner());
+        std::shared_ptr<Tool> screwdriver(new Screwdriver());
+        std::shared_ptr<Tool> pincher(new Pincher());
+        std::shared_ptr<Tool> toolbox(new Toolbox());
+    
+        std::dynamic_pointer_cast<Toolbox>(toolbox)->add(screwdriver);
+        std::dynamic_pointer_cast<Toolbox>(toolbox)->add(pincher);
+        std::dynamic_pointer_cast<Toolbox>(toolbox)->add(spanner);
+    
+        getServicePlatform().setToolbox(toolbox);
+        getServicePlatform().getToolbox()->exert();
     }
 };
 

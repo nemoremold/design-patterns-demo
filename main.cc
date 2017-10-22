@@ -44,19 +44,5 @@ int main(void) {
     director.setBuilder(std::unique_ptr<AudiServicePlatformBuilder>(new AudiServicePlatformBuilder));
     director.construct();
 
-    std::shared_ptr<Tool> spanner(new Spanner());
-    std::shared_ptr<Tool> screwdriver(new Screwdriver());
-    std::shared_ptr<Tool> pincher(new Pincher());
-    std::shared_ptr<Tool> smallToolbox(new Toolbox());
-
-    std::dynamic_pointer_cast<Toolbox>(smallToolbox)->add(spanner);
-    std::dynamic_pointer_cast<Toolbox>(smallToolbox)->add(screwdriver);
-
-    std::shared_ptr<Tool> largeToolbox(new Toolbox());
-    std::dynamic_pointer_cast<Toolbox>(largeToolbox)->add(pincher);
-    std::dynamic_pointer_cast<Toolbox>(largeToolbox)->add(smallToolbox);
-
-    largeToolbox->exert();
-
     return 0;
 }
