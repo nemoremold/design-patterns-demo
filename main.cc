@@ -3,6 +3,7 @@
 #include "log.hpp"
 #include "toolbox.hpp"
 #include "car_factory.hpp"
+#include "service_line.hpp"
 #include "service_platform.hpp"
 
 #include <memory>
@@ -43,6 +44,15 @@ int main(void) {
     director.construct();
     director.setBuilder(std::unique_ptr<AudiServicePlatformBuilder>(new AudiServicePlatformBuilder));
     director.construct();
+
+    std::shared_ptr<ServiceLine> line1(new ServiceLine());
+    line1->add(std::string("NAME1"));
+    line1->add(std::string("NAME2"));
+    std::shared_ptr<ServiceLine> line2 = line1->clone();
+    std::cout << line2->serve() << std::endl;
+    std::cout << line2->serve() << std::endl;
+    std::cout << line1->serve() << std::endl;
+    std::cout << line1->serve() << std::endl;
 
     return 0;
 }
