@@ -36,16 +36,13 @@ int main(void) {
     log.showAll();
 
     ServicePlatformDirector director;
-    BenzServicePlatformBuilder benzServicePlatformBuilder;
-    director.setBuilder(&benzServicePlatformBuilder);
+    director.setBuilder(std::unique_ptr<BenzServicePlatformBuilder>(new BenzServicePlatformBuilder));
     director.construct();
     BmwServicePlatformBuilder bmwServicePlatformBuilder;
-    director.setBuilder(&bmwServicePlatformBuilder);
+    director.setBuilder(std::unique_ptr<BmwServicePlatformBuilder>(new BmwServicePlatformBuilder));
     director.construct();
-    AudiServicePlatformBuilder audiServicePlatformBuilder;
-    director.setBuilder(&audiServicePlatformBuilder);
+    director.setBuilder(std::unique_ptr<AudiServicePlatformBuilder>(new AudiServicePlatformBuilder));
     director.construct();
-
 
     std::shared_ptr<Tool> spanner(new Spanner());
     std::shared_ptr<Tool> screwdriver(new Screwdriver());

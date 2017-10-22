@@ -1,6 +1,9 @@
 #ifndef _SERVICE_PLATFORM_HPP_
 #define _SERVICE_PLATFORM_HPP_
 
+#include "toolbox.hpp"
+
+#include <memory>
 #include <string>
 #include <iostream>
 
@@ -32,6 +35,7 @@ public:
     virtual void configureType() = 0;
     virtual void configureMaintainer() = 0;
     virtual void configureHelper() = 0;
+    virtual void configureToolbox() = 0;
 
     ServicePlatform &getServicePlatform() {
         return servicePlatform;
@@ -54,6 +58,10 @@ public:
     void configureHelper() {
         getServicePlatform().setHelper(std::string("BenzHelper"));
     }
+
+    void configureToolbox() {
+
+    }
 };
 
 class BmwServicePlatformBuilder : public Builder {
@@ -68,6 +76,10 @@ public:
 
     void configureHelper() {
         getServicePlatform().setHelper(std::string("BmwHelper"));
+    }
+
+    void configureToolbox() {
+
     }
 };
 
@@ -84,6 +96,10 @@ public:
     void configureHelper() {
         getServicePlatform().setHelper(std::string("AudiHelper"));
     }
+
+    void configureToolbox() {
+
+    }
 };
 
 class ServicePlatformDirector {
@@ -92,18 +108,19 @@ public:
         return _builder->getServicePlatform();
     }
 
-    void setBuilder(Builder *builder) {
-        _builder = builder;
+    void setBuilder(std::unique_ptr<Builder> builder) {
+        _builder = std::move(builder);
     }
 
     void construct() {
         _builder->configureType();
         _builder->configureMaintainer();
         _builder->configureHelper();
+        _builder->configureToolbox();
     }
 
 private:
-    Builder *_builder;
+    std::unique_ptr<Builder> _builder;
 };
 
 #endif
