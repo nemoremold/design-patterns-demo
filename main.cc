@@ -1,9 +1,11 @@
 #include "utility/shared_ptr.hpp"
 
 #include "log.hpp"
+#include "toolbox.hpp"
 #include "car_factory.hpp"
 #include "service_platform.hpp"
 
+#include <memory>
 #include <string>
 #include <iostream>
 
@@ -43,6 +45,21 @@ int main(void) {
     AudiServicePlatformBuilder audiServicePlatformBuilder;
     director.setBuilder(&audiServicePlatformBuilder);
     director.construct();
+
+
+    std::shared_ptr<Tool> spanner(new Spanner());
+    std::shared_ptr<Tool> screwdriver(new Screwdriver());
+    std::shared_ptr<Tool> pincher(new Pincher());
+    std::shared_ptr<Tool> smallToolbox(new Toolbox());
+
+    std::dynamic_pointer_cast<Toolbox>(smallToolbox)->add(spanner);
+    std::dynamic_pointer_cast<Toolbox>(smallToolbox)->add(screwdriver);
+
+    std::shared_ptr<Tool> largeToolbox(new Toolbox());
+    std::dynamic_pointer_cast<Toolbox>(largeToolbox)->add(pincher);
+    std::dynamic_pointer_cast<Toolbox>(largeToolbox)->add(smallToolbox);
+
+    largeToolbox->exert();
 
     return 0;
 }
