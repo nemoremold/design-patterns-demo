@@ -1,6 +1,7 @@
 #include "utility/shared_ptr.hpp"
 
 #include "log.hpp"
+#include "person.hpp"
 #include "toolbox.hpp"
 #include "car_factory.hpp"
 #include "service_line.hpp"
@@ -45,14 +46,22 @@ int main(void) {
     director.setBuilder(std::unique_ptr<AudiServicePlatformBuilder>(new AudiServicePlatformBuilder));
     director.construct();
 
-    std::shared_ptr<ServiceLine> line1(new ServiceLine());
-    line1->add(std::string("NAME1"));
-    line1->add(std::string("NAME2"));
-    std::shared_ptr<ServiceLine> line2 = line1->clone();
-    std::cout << line2->serve() << std::endl;
-    std::cout << line2->serve() << std::endl;
-    std::cout << line1->serve() << std::endl;
-    std::cout << line1->serve() << std::endl;
+    std::shared_ptr<Person> person1(new Person());
+    person1->setName(std::string("GUEST1"));
+    std::shared_ptr<Person> person2 = person1->clone();
+    std::cout << person1->getName() << std::endl;
+    person2->setName(std::string("GUEST2"));
+    std::cout << person2->getName() << std::endl;
+    std::cout << person1->getName() << std::endl;
+    
+    std::shared_ptr<LargeServiceLine> largeServiceLine(new LargeServiceLine());
+    std::shared_ptr<SmallServiceLine> smallServiceLine(new SmallServiceLine());
+    smallServiceLine->setNext(largeServiceLine);
+    
+    for (size_t i = 0; i < 25; ++i) {
+        auto person = person1->clone();
+        smallServiceLine->handle(*person);
+    }
 
     return 0;
 }
