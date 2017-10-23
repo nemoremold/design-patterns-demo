@@ -12,9 +12,9 @@ class ServiceLine {
 public:
     // The "chain" method in the base class
     // always delegates to the next object
-    virtual void handle(Person p) {
+    virtual void handle(Guest g) {
         if (_next) {
-            _next->handle(p);
+            _next->handle(g);
         }
         else {
             std::cout << "ServiceLine is full!" << std::endl;
@@ -29,45 +29,45 @@ public:
         return _queue.size() >= size;
     }
 
-    Person serve() {
-        auto s = _queue.front();
+    Guest serve() {
+        auto g = _queue.front();
         _queue.pop();
-        return s;
+        return g;
     }
 
-    void addToQueue(Person p) {
-        _queue.push(p);
+    void addToQueue(Guest g) {
+        _queue.push(g);
     }
 
 private:
     // "next" pointer in the base class
     std::shared_ptr<ServiceLine> _next;
 
-    std::queue<Person> _queue;
+    std::queue<Guest> _queue;
 };
 
 class LargeServiceLine : public ServiceLine {
 public:
-    void handle(Person p) override {
+    void handle(Guest g) override {
         if (isFull(20)) {
-            ServiceLine::handle(p);
+            ServiceLine::handle(g);
         }
         else {
             std::cout << "Handled in LargeServiceLine..." << std::endl;
-            addToQueue(p);
+            addToQueue(g);
         }
     }
 };
 
 class SmallServiceLine : public ServiceLine {
 public:
-    void handle(Person p) override {
+    void handle(Guest g) override {
         if (isFull(5)) {
-            ServiceLine::handle(p);
+            ServiceLine::handle(g);
         }
         else {
             std::cout << "Handled in SmallServiceLine..." << std::endl;
-            addToQueue(p);
+            addToQueue(g);
         }
     }
 };
