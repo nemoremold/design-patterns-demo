@@ -13,7 +13,12 @@ public:
     // The "chain" method in the base class
     // always delegates to the next object
     virtual void handle(Person p) {
-        _next->handle(p);
+        if (_next) {
+            _next->handle(p);
+        }
+        else {
+            std::cout << "ServiceLine is full!" << std::endl;
+        }
     }
 
     void setNext(std::shared_ptr<ServiceLine> next) {
@@ -48,7 +53,7 @@ public:
             ServiceLine::handle(p);
         }
         else {
-            std::cout << "Handled in LargeServiceLine" << std::endl;
+            std::cout << "Handled in LargeServiceLine..." << std::endl;
             addToQueue(p);
         }
     }
@@ -61,7 +66,7 @@ public:
             ServiceLine::handle(p);
         }
         else {
-            std::cout << "Handled in SmallServiceLine" << std::endl;
+            std::cout << "Handled in SmallServiceLine..." << std::endl;
             addToQueue(p);
         }
     }

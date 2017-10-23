@@ -57,8 +57,8 @@ int main(void) {
     std::shared_ptr<LargeServiceLine> largeServiceLine(new LargeServiceLine());
     std::shared_ptr<SmallServiceLine> smallServiceLine(new SmallServiceLine());
     smallServiceLine->setNext(largeServiceLine);
-    
-    for (size_t i = 0; i < 25; ++i) {
+
+    for (size_t i = 0; i < 30; ++i) {
         auto person = person1->clone();
         smallServiceLine->handle(*person);
     }
