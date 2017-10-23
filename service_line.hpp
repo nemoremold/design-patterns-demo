@@ -3,10 +3,11 @@
 
 #include "person.hpp"
 
-#include <queue>
+#include <deque>
 #include <memory>
 #include <string>
 #include <iostream>
+#include <algorithm>
 
 class ServiceLine {
 public:
@@ -31,19 +32,25 @@ public:
 
     Guest serve() {
         auto g = _queue.front();
-        _queue.pop();
+        std::cout << "Guest " << g.getName() << " is now to get service." << std::endl;
+        _queue.pop_front();
+        notify();
         return g;
     }
 
     void addToQueue(Guest g) {
-        _queue.push(g);
+        _queue.push_back(g);
+    }
+
+    void notify() {
+        std::for_each(_queue.begin(), _queue.end(), [](Guest &p){ p.update(); });
     }
 
 private:
     // "next" pointer in the base class
     std::shared_ptr<ServiceLine> _next;
 
-    std::queue<Guest> _queue;
+    std::deque<Guest> _queue;
 };
 
 class LargeServiceLine : public ServiceLine {

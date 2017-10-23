@@ -48,10 +48,13 @@ int main(void) {
     std::shared_ptr<SmallServiceLine> smallServiceLine(new SmallServiceLine());
     smallServiceLine->setNext(largeServiceLine);
 
-    for (size_t i = 0; i < 30; ++i) {
+    for (size_t i = 1; i <= 30; ++i) {
         auto guest = guest1->clone();
+        guest->setName(std::string("LINEGUEST") + std::to_string(i));
         smallServiceLine->handle(*guest);
     }
+
+    smallServiceLine->serve();
 
     ChatRoom chatRoom;
     std::shared_ptr<Manager> manager(new Manager());

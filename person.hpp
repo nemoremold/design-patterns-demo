@@ -41,6 +41,10 @@ public:
             std::cout << "Guest " << getName() << " says: " << getContent() << std::endl;
         }
     }
+
+    void update() {
+        std::cout << "Guest " << getName() << " received notification." << std::endl;
+    }
 };
 
 class Manager : public Person {
