@@ -51,7 +51,7 @@ int main(void) {
     for (size_t i = 1; i <= 30; ++i) {
         auto guest = guest1->clone();
         guest->setName(std::string("LINEGUEST") + std::to_string(i));
-        smallServiceLine->handle(*guest);
+        smallServiceLine->handle(guest);
     }
 
     smallServiceLine->serve();

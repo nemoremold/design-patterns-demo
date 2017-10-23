@@ -13,7 +13,7 @@ class ServiceLine {
 public:
     // The "chain" method in the base class
     // always delegates to the next object
-    virtual void handle(Guest g) {
+    virtual void handle(std::shared_ptr<Guest> g) {
         if (_next) {
             _next->handle(g);
         }
@@ -30,37 +30,37 @@ public:
         return _queue.size() >= size;
     }
 
-    Guest serve() {
+    std::shared_ptr<Guest> serve() {
         auto g = _queue.front();
-        std::cout << "Guest " << g.getName() << " is now to get service." << std::endl;
+        std::cout << "Guest " << g->getName() << " is now to get service." << std::endl;
         _queue.pop_front();
         notify();
         return g;
     }
 
-    void addToQueue(Guest g) {
+    void addToQueue(std::shared_ptr<Guest> g) {
         _queue.push_back(g);
     }
 
     void notify() {
-        std::for_each(_queue.begin(), _queue.end(), [](Guest &p){ p.update(); });
+        std::for_each(_queue.begin(), _queue.end(), [](std::shared_ptr<Guest> &p){ p->update(); });
     }
 
 private:
     // "next" pointer in the base class
     std::shared_ptr<ServiceLine> _next;
 
-    std::deque<Guest> _queue;
+    std::deque<std::shared_ptr<Guest>> _queue;
 };
 
 class LargeServiceLine : public ServiceLine {
 public:
-    void handle(Guest g) override {
+    void handle(std::shared_ptr<Guest> g) override {
         if (isFull(20)) {
             ServiceLine::handle(g);
         }
         else {
-            std::cout << "Handled in LargeServiceLine..." << std::endl;
+            std::cout << "Guest " << g->getName() << " gets handled in LargeServiceLine..." << std::endl;
             addToQueue(g);
         }
     }
@@ -68,12 +68,12 @@ public:
 
 class SmallServiceLine : public ServiceLine {
 public:
-    void handle(Guest g) override {
+    void handle(std::shared_ptr<Guest> g) override {
         if (isFull(5)) {
             ServiceLine::handle(g);
         }
         else {
-            std::cout << "Handled in SmallServiceLine..." << std::endl;
+            std::cout << "Guest " << g->getName() << " gets handled in SmallServiceLine..." << std::endl;
             addToQueue(g);
         }
     }
