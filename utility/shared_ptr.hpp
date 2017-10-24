@@ -13,6 +13,8 @@ public:
     using deleter_t = std::function<void (T *)>;
 
     // default ctor
+    shared_ptr() : t(nullptr), deleter([](T *t){ delete t; }), count(new size_t(0)) { }
+    
     explicit shared_ptr(T *t, deleter_t d = [](T *t){ delete t; }) : t(t), count(new size_t(1)), deleter(d) { }
 
     // copy ctor
