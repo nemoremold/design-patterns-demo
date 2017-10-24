@@ -1,12 +1,17 @@
 #ifndef _LIST_HPP_
 #define _LIST_HPP_
 
+#include <cstddef>
+
+namespace np {
+
 template <class T>
 struct list_node {
   list_node<T> *_prev;
   list_node<T> *_next;
   T _data;
-  list_node(const T &data = T()) : _prev(nullptr), _next(nullptr), _data(data) {}
+  list_node(){}
+  list_node(const T &data) : _prev(nullptr), _next(nullptr), _data(data) {}
 };
 
 template <class T, class Ref, class Ptr>
@@ -71,6 +76,14 @@ public:
     _list->_next = _list;
     _list->_prev = _list;
   }
+
+  ~list(){
+    iterator it = begin();
+    while(it != end()){
+      it = erase(it);
+    }
+    erase(it);
+  }
   
   iterator begin() {
     return iterator(_list->_next);
@@ -122,7 +135,7 @@ public:
     tmp->_prev = prev;
   }
   
-  iterator &erase(iterator pos) {
+  iterator erase(iterator pos) {
     list_node<T> *cur = pos._node;
     list_node<T> *prev = cur->_prev;
     list_node<T> *next = cur->_next;
@@ -133,12 +146,7 @@ public:
   }
   
   bool empty() const {
-    if (_list->_next == _list) {
-      return true;
-    }
-    else {
-      return false;
-    }
+    return _list->_next == _list;
   }
   
   size_t size() {
@@ -155,5 +163,7 @@ public:
 protected:
   list_node<T> *_list;
 };
+
+}
 
 #endif
