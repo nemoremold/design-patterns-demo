@@ -11,7 +11,7 @@ struct list_node {
 
 template <class T, class Ref, class Ptr>
 struct list_iterator {
-  typedef list_iterator<T, Ref, Ptr> Self;
+  typedef list_iterator<T, Ref, Ptr> self;
   list_node<T> *_node;
 
   list_iterator() {}
@@ -26,32 +26,32 @@ struct list_iterator {
     return &(operator*());
   }
 
-  bool operator==(const Self &x) {
+  bool operator==(const self &x) {
     return (_node == x._node);
   }
 
-  bool operator!=(const Self &x) {
+  bool operator!=(const self &x) {
     return (_node != x._node);
   }
 
-  Self &operator++() {
+  self &operator++() {
     _node = _node->_next;
     return *this;
   }
   
-  Self operator++(int) {
-    Self old = *this;
+  self operator++(int) {
+    self old = *this;
     ++(*this);
     return old;
   }
   
-  Self &operator--() {
+  self &operator--() {
     (_node = _node->_prev);
     return *this;
   }
   
-  Self operator--(int) {
-    Self old = *this;
+  self operator--(int) {
+    self old = *this;
     --(*this);
     return old;
   }
@@ -60,11 +60,11 @@ struct list_iterator {
 template <class T>
 class list {
 public:
-  typedef list_iterator<T, T&, T*> Iterator;
-  typedef list_iterator<T, const T&, const T*> ConstIterator;
+  typedef list_iterator<T, T&, T*> iterator;
+  typedef list_iterator<T, const T&, const T*> const_iterator;
 
 private:
-  typedef T &Reference;
+  typedef T &reference;
 
 public:
   list() : _list(new list_node<T>()) {
@@ -72,67 +72,67 @@ public:
     _list->_prev = _list;
   }
   
-  Iterator Begin() {
-    return Iterator(_list->_next);
+  iterator begin() {
+    return iterator(_list->_next);
   }
   
-  Iterator End() {
-    return Iterator(_list);
+  iterator end() {
+    return iterator(_list);
   }
   
-  ConstIterator Begin() const {
+  const_iterator begin() const {
     return _list->_next;
   }
   
-  ConstIterator End() const {
-    return _list->_next;
+  const_iterator end() const {
+    return _list;
   }
   
-  void PushBack(const T &data) {
-    Insert(End(), data);
+  void push_back(const T &data) {
+    insert(end(), data);
   }
   
-  void PopBack() {
-    Erase(Iterator(_list->_prev));
+  void pop_back() {
+    erase(iterator(_list->_prev));
   }
   
-  void PushFront(const T &data) {
-    Insert(Iterator(_list->_next), data);
+  void push_front(const T &data) {
+    insert(iterator(_list->_next), data);
   }
   
-  void PopFront() {
-    Erase(Iterator(_list->_next));
+  void pop_front() {
+    erase(iterator(_list->_next));
   }
   
-  Reference Front() {
-    return *Begin();
+  reference front() {
+    return *begin();
   }
   
-  Reference Back() {
-    return *(--End());
+  reference back() {
+    return *(--end());
   }
 
-  void Insert(Iterator pos, const T &data) {
-    list_node<T> * cur = pos._node;
-    list_node<T> * prev = cur->_prev;
-    list_node<T> * tmp = new list_node<T>(data);
+  void insert(iterator pos, const T &data) {
+    list_node<T> *cur = pos._node;
+    list_node<T> *prev = cur->_prev;
+    list_node<T> *tmp = new list_node<T>(data);
     tmp->_next = cur;
     cur->_prev = tmp;
     prev->_next = tmp;
     tmp->_prev = prev;
   }
   
-  Iterator &Erase(Iterator pos) {
-    list_node<T> * cur = pos._node;
-    list_node<T> * prev = cur->_prev;
-    list_node<T> * next = cur->_next;
+  iterator &erase(iterator pos) {
+    list_node<T> *cur = pos._node;
+    list_node<T> *prev = cur->_prev;
+    list_node<T> *next = cur->_next;
     prev->_next = next;
     next->_prev = prev;
     delete cur;
-    return Iterator(next);
+    return iterator(next);
   }
   
-  bool Empty() const {
+  bool empty() const {
     if (_list->_next == _list) {
       return true;
     }
@@ -141,10 +141,10 @@ public:
     }
   }
   
-  size_t Size() {
+  size_t size() {
     int size = 0;
-    list_node<T> * start = _list->_next;
-    list_node<T> * end = _list;
+    list_node<T> *start = _list->_next;
+    list_node<T> *end = _list;
     while (start != end) {
       ++size;
       start = start->_next;
