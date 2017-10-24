@@ -1,244 +1,159 @@
 #ifndef _LIST_HPP_
 #define _LIST_HPP_
 
-#include <cstddef>
-
-namespace dp {
-
-template <typename T>
+template <class T>
 struct list_node {
-    list_node<T>* prev;
-    list_node<T>* next;
-    T data;
+  list_node<T> *_prev;
+  list_node<T> *_next;
+  T _data;
+  list_node(const T &data = T()) : _prev(nullptr), _next(nullptr), _data(data) {}
 };
 
-template <typename T>
-class list_iterator {
-private:
-    typedef T value_type;
-    typedef T* pointer;
-    typedef T& reference;
+template <class T, class Ref, class Ptr>
+struct list_iterator {
+  typedef list_iterator<T, Ref, Ptr> Self;
+  list_node<T> *_node;
 
-public:
-    list_iterator() : node(nullptr) {}
-    list_iterator(list_node<T> *x) : node(x) {}
-    list_iterator(const list_iterator<T> &x) : node(x.node) {}
+  list_iterator() {}
 
-    bool operator== (const list_iterator<T> &rhs) const {
-        return node == rhs.node;
-    }
+  list_iterator(list_node<T> *node) : _node(node) {}
+ 
+  Ref operator*() const {
+    return _node->_data;
+  }
 
-    bool operator!= (const list_iterator<T> &rhs) const {
-        return !(operator==(rhs));
-    }
+  Ptr operator->() const {
+    return &(operator*());
+  }
 
-    reference operator* () const {
-        return node->data;
-    }
+  bool operator==(const Self &x) {
+    return (_node == x._node);
+  }
 
-    pointer operator-> () const {
-        return &(operator*());
-    }
+  bool operator!=(const Self &x) {
+    return (_node != x._node);
+  }
 
-    list_iterator& operator++ () {
-        node = node->next;
-        return *this;
-    }
-
-    list_iterator operator++ (int) {
-        list_iterator<T> old = *this;
-        ++(*this);
-        return old;
-    }
-
-    list_iterator& operator-- () {
-        node = node->prev;
-        return *this;
-    }
-
-    list_iterator operator-- (int) {
-        list_iterator<T> old = *this;
-        --(*this);
-        return old;
-    }
-
-    list_node<T> *node;
+  Self &operator++() {
+    _node = _node->_next;
+    return *this;
+  }
+  
+  Self operator++(int) {
+    Self old = *this;
+    ++(*this);
+    return old;
+  }
+  
+  Self &operator--() {
+    (_node = _node->_prev);
+    return *this;
+  }
+  
+  Self operator--(int) {
+    Self old = *this;
+    --(*this);
+    return old;
+  }
 };
 
-template <typename T>
+template <class T>
 class list {
+public:
+  typedef list_iterator<T, T&, T*> Iterator;
+  typedef list_iterator<T, const T&, const T*> ConstIterator;
+
 private:
-    list_node<T>* node;
-    static std::allocator<list_node<T> > alloc;
+  typedef T &Reference;
 
 public:
-    typedef list_iterator<T> iterator;
+  list() : _list(new list_node<T>()) {
+    _list->_next = _list;
+    _list->_prev = _list;
+  }
+  
+  Iterator Begin() {
+    return Iterator(_list->_next);
+  }
+  
+  Iterator End() {
+    return Iterator(_list);
+  }
+  
+  ConstIterator Begin() const {
+    return _list->_next;
+  }
+  
+  ConstIterator End() const {
+    return _list->_next;
+  }
+  
+  void PushBack(const T &data) {
+    Insert(End(), data);
+  }
+  
+  void PopBack() {
+    Erase(Iterator(_list->_prev));
+  }
+  
+  void PushFront(const T &data) {
+    Insert(Iterator(_list->_next), data);
+  }
+  
+  void PopFront() {
+    Erase(Iterator(_list->_next));
+  }
+  
+  Reference Front() {
+    return *Begin();
+  }
+  
+  Reference Back() {
+    return *(--End());
+  }
 
-    iterator begin() {
-        return (list_iterator<T>)node->next;
+  void Insert(Iterator pos, const T &data) {
+    list_node<T> * cur = pos._node;
+    list_node<T> * prev = cur->_prev;
+    list_node<T> * tmp = new list_node<T>(data);
+    tmp->_next = cur;
+    cur->_prev = tmp;
+    prev->_next = tmp;
+    tmp->_prev = prev;
+  }
+  
+  Iterator &Erase(Iterator pos) {
+    list_node<T> * cur = pos._node;
+    list_node<T> * prev = cur->_prev;
+    list_node<T> * next = cur->_next;
+    prev->_next = next;
+    next->_prev = prev;
+    delete cur;
+    return Iterator(next);
+  }
+  
+  bool Empty() const {
+    if (_list->_next == _list) {
+      return true;
     }
-
-    iterator end() {
-        return (list_iterator<T>)node;
+    else {
+      return false;
     }
-
-    iterator empty() {
-        return node->next == node;
+  }
+  
+  size_t Size() {
+    int size = 0;
+    list_node<T> * start = _list->_next;
+    list_node<T> * end = _list;
+    while (start != end) {
+      ++size;
+      start = start->_next;
     }
-
-    size_t size() {
-        size_t len = 0;
-        distance(begin(), end(), len);
-        return len;
-    }
-
-    T& front() {
-        return *begin();
-    }
-
-    T& back() {
-        return *(--end());
-    }
-
-    list() {
-        empty_initialize();
-    }
-
-    ~list() {
-        clear();
-        if (node != nullptr) {
-            delete node;
-        }
-    }
-
-    void push_back(const T& x) {
-        insert(end(), x);
-    }
-
-    void push_front(const T&x) {
-        insert(begin(), x);
-    }
-
-    iterator insert(iterator position, const T& x) {
-        list_node<T>* tmp = create_node(x);
-        tmp->next = position.node;
-        tmp->prev = position.node->prev;
-        position.node->prev->next = tmp;
-        position.node->prev = tmp;
-        return tmp;
-    }
-
-    iterator erase(iterator position) {
-        list_node<T>* next_node = position.node->next;
-        list_node<T>* prev_node = position.node->prev;
-        prev_node->next = next_node;
-        next_node->prev = prev_node;
-        destroy_node(position.node);
-        return iterator(next_node);
-    }
-
-    void pop_front() {
-        erase(begin());
-    }
-
-    void pop_back() {
-        iterator tmp = end();
-        erase(--tmp);
-    }
-
-    void clear() {
-        list_node<T>* cur = node->next;
-        while (cur != node) {
-            list_node<T>* tmp = cur;
-            cur = (list_node<T>*)cur->next;
-            destroy_node(tmp);
-        }
-        node->next = node;
-        node->prev = node;
-    }
-
-    void remove(const T& value) {
-        iterator first = begin();
-        iterator last = end();
-        while (first != last) {
-            iterator next = first;
-            ++next;
-            if (*first == value) {
-                erase(first);
-            }
-            first = next;
-        }
-    }
-
-    void unique() {
-        iterator first = begin();
-        iterator last = end();
-        if (first == last) {
-            return;
-        }
-        iterator next = first;
-        while (++next != last) {
-            if (*first == *next) {
-                erase(next);
-            } else {
-                first = next;
-            }
-            next = first;
-        }
-    }
-
-    void splice(iterator position, list& x) {
-        if (!x.empty()) {
-            transfer(position, x.begin(), x.end());
-        }
-    }
-
-    void splice(iterator position, list&, iterator i) {
-        iterator j = i;
-        ++j;
-        if (position == i || position == j) {
-            return;
-        }
-        transfer(position, i, j);
-    }
-
-    void splice(iterator position, list&, iterator first, iterator last) {
-        if (first != last) {
-            transfer(position, first, last);
-        }
-    }
+    return size;
+  }
 
 protected:
-    void empty_initialize() {
-        node = get_node();
-        node->next = node;
-        node->prev = node;
-    }
-
-    list_node<T>* get_node() {
-        return alloc.allocate(1);
-    }
-
-    void put_node(list_node<T>* p) {
-        alloc.deallocate(p, 1);
-        return;
-    }
-
-    list_node<T>* create_node(const T& x) {
-        list_node<T>* p = get_node();
-        alloc.construct(&p->data, x);
-        return p;
-    }
-
-    void destroy_node(list_node<T>* p) {
-        alloc.destroy(&(p->data));
-        put_node(p);
-    }
+  list_node<T> *_list;
 };
-
-template <typename T>
-std::allocator<list_node<T> > list<T>::alloc;
-
-}
 
 #endif
