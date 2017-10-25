@@ -14,14 +14,6 @@
 #include <iostream>
 #include <thread>
 
-
-
-void multithread_serve(std::shared_ptr<ServiceLine> serviceLine){
-    while(!serviceLine->isEmpty()){
-        serviceLine->serve();
-    }
-}
-
 int main(void) {
 
     #ifdef BUSINESS_CAR
@@ -39,13 +31,10 @@ int main(void) {
 
     assistant.initializeServicePlatform();
 
-    std::shared_ptr<Guest> guest1(new Guest());
-    guest1->setName(std::string("GUEST1"));
-    auto guest2 = guest1->clone();
+    auto guest1 = assistant.initializeGuest("GUEST1");
+    auto guest2 = assistant.cloneGuest(guest1, "GUEST2");
     std::cout << guest1->getName() << std::endl;
-    guest2->setName(std::string("GUEST2"));
     std::cout << guest2->getName() << std::endl;
-    std::cout << guest1->getName() << std::endl;
 
     auto largeServiceLine = assistant.initializeServiceLine<LargeServiceLine>();
     auto smallServiceLine = assistant.initializeServiceLine<SmallServiceLine>();
@@ -57,21 +46,10 @@ int main(void) {
         smallServiceLine->handle(guest);
     }
 
-
-    std::thread server1(multithread_serve, smallServiceLine);
-    std::thread server2(multithread_serve, smallServiceLine);
-    std::thread server3(multithread_serve, largeServiceLine);
-    std::thread server4(multithread_serve, largeServiceLine);
-    
-    server1.join();
-    server2.join();
-    server3.join();
-    server4.join();
-    // smallServiceLine->serve();
+    assistant.multiThreading(4, 2, &smallServiceLine, 2, &largeServiceLine);
 
     ChatRoom chatRoom;
-    std::shared_ptr<Manager> manager(new Manager());
-    manager->setName(std::string("MANAGER"));
+    auto manager = assistant.initializeManager("MANAGER");
 
     chatRoom.addPerson(guest1);
     chatRoom.addPerson(guest2);
