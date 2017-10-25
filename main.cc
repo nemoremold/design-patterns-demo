@@ -4,6 +4,7 @@
 #include "chat.hpp"
 #include "person.hpp"
 #include "toolbox.hpp"
+#include "assistant.hpp"
 #include "car_factory.hpp"
 #include "service_line.hpp"
 #include "service_platform.hpp"
@@ -20,21 +21,14 @@ int main(void) {
     SportsCarFactory carFactory;
     #endif
 
+    auto assistant = Assistant();
+
     dp::shared_ptr<AudiCar> car = carFactory.createAudiCar(std::string("AudiCar"));
     car->drive();
 
-    Log &log = Log::Instance();
-    log.addNew(std::string("Log test1"));
-    log.addNew(std::string("Log test2"));
-    log.showAll();
+    assistant.log("Log test");
 
-    ServicePlatformDirector director;
-    director.setBuilder(std::unique_ptr<BenzServicePlatformBuilder>(new BenzServicePlatformBuilder));
-    director.construct();
-    director.setBuilder(std::unique_ptr<BmwServicePlatformBuilder>(new BmwServicePlatformBuilder));
-    director.construct();
-    director.setBuilder(std::unique_ptr<AudiServicePlatformBuilder>(new AudiServicePlatformBuilder));
-    director.construct();
+    assistant.initializeServicePlatform();
 
     std::shared_ptr<Guest> guest1(new Guest());
     guest1->setName(std::string("GUEST1"));
@@ -43,9 +37,9 @@ int main(void) {
     guest2->setName(std::string("GUEST2"));
     std::cout << guest2->getName() << std::endl;
     std::cout << guest1->getName() << std::endl;
-    
-    std::shared_ptr<LargeServiceLine> largeServiceLine(new LargeServiceLine());
-    std::shared_ptr<SmallServiceLine> smallServiceLine(new SmallServiceLine());
+
+    auto largeServiceLine = assistant.initializeServiceLine<LargeServiceLine>();
+    auto smallServiceLine = assistant.initializeServiceLine<SmallServiceLine>();
     smallServiceLine->setNext(largeServiceLine);
 
     for (size_t i = 1; i <= 30; ++i) {
