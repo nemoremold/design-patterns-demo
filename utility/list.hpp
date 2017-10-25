@@ -106,7 +106,9 @@ public:
   }
   
   void pop_back() {
-    erase(iterator(_list->_prev));
+    if(!empty()){
+      erase(iterator(_list->_prev));
+    }
   }
   
   void push_front(const T &data) {
@@ -114,7 +116,9 @@ public:
   }
   
   void pop_front() {
-    erase(iterator(_list->_next));
+    if(!empty()){
+      erase(iterator(_list->_next));
+    }
   }
   
   reference front() {
