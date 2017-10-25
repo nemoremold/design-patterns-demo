@@ -5,6 +5,7 @@
 #include <string>
 #include <iostream>
 
+static std::mutex mutex;
 class Person {
 public:
     void setName(std::string s) {
@@ -38,6 +39,8 @@ public:
 
     void talk() override {
         if (!getContent().empty()) {
+            std::lock_guard<std::mutex> locker(mutex);
+            
             std::cout << "Guest " << getName() << " says: " << getContent() << std::endl;
         }
     }

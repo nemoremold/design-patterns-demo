@@ -11,6 +11,15 @@
 #include <memory>
 #include <string>
 #include <iostream>
+#include <thread>
+
+
+
+void multithread_serve(std::shared_ptr<ServiceLine> serviceLine){
+    while(!serviceLine->isEmpty()){
+        serviceLine->serve();
+    }
+}
 
 int main(void) {
 
@@ -54,7 +63,17 @@ int main(void) {
         smallServiceLine->handle(guest);
     }
 
-    smallServiceLine->serve();
+
+    std::thread server1(multithread_serve, smallServiceLine);
+    std::thread server2(multithread_serve, smallServiceLine);
+    std::thread server3(multithread_serve, largeServiceLine);
+    std::thread server4(multithread_serve, largeServiceLine);
+    
+    server1.join();
+    server2.join();
+    server3.join();
+    server4.join();
+    // smallServiceLine->serve();
 
     ChatRoom chatRoom;
     std::shared_ptr<Manager> manager(new Manager());

@@ -2,12 +2,15 @@
 #define _SERVICE_LINE_HPP_
 
 #include "person.hpp"
-
+#include "utility/concurrent_deque.hpp"
+#include <cstdio>
 #include <deque>
 #include <memory>
 #include <string>
 #include <iostream>
 #include <algorithm>
+#include <mutex>
+
 
 class ServiceLine {
 public:
@@ -18,6 +21,8 @@ public:
             _next->handle(g);
         }
         else {
+            std::lock_guard<std::mutex> locker(mutex);
+            
             std::cout << "ServiceLine is full!" << std::endl;
         }
     }
@@ -30,9 +35,16 @@ public:
         return _queue.size() >= size;
     }
 
+    bool isEmpty(){
+        return _queue.empty();
+    }
+
     std::shared_ptr<Guest> serve() {
         auto g = _queue.front();
+        std::lock_guard<std::mutex> locker(mutex);
+        
         std::cout << "Guest " << g->getName() << " is now to get service." << std::endl;
+        
         _queue.pop_front();
         notify();
         return g;
@@ -50,7 +62,9 @@ private:
     // "next" pointer in the base class
     std::shared_ptr<ServiceLine> _next;
 
-    std::deque<std::shared_ptr<Guest>> _queue;
+    concurrent_deque<std::shared_ptr<Guest>> _queue;
+
+    // concurrent_deque<std::shared_ptr<Guest>> _queue;
 };
 
 class LargeServiceLine : public ServiceLine {
@@ -60,7 +74,10 @@ public:
             ServiceLine::handle(g);
         }
         else {
+            std::lock_guard<std::mutex> locker(mutex);
+            
             std::cout << "Guest " << g->getName() << " gets handled in LargeServiceLine..." << std::endl;
+            
             addToQueue(g);
         }
     }
@@ -73,7 +90,10 @@ public:
             ServiceLine::handle(g);
         }
         else {
+            std::lock_guard<std::mutex> locker(mutex);
+            
             std::cout << "Guest " << g->getName() << " gets handled in SmallServiceLine..." << std::endl;
+            
             addToQueue(g);
         }
     }
