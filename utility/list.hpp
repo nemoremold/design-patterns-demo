@@ -153,7 +153,7 @@ public:
     return _list->_next == _list;
   }
   
-  size_t size() const{
+  size_t size() const {
     int size = 0;
     list_node<T> *start = _list->_next;
     list_node<T> *end = _list;

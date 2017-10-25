@@ -35,7 +35,7 @@ public:
         return _queue.size() >= size;
     }
 
-    bool isEmpty(){
+    bool isEmpty() {
         return _queue.empty();
     }
 
@@ -62,7 +62,7 @@ private:
     // "next" pointer in the base class
     std::shared_ptr<ServiceLine> _next;
 
-    concurrent_deque<std::shared_ptr<Guest>> _queue;
+    dp::concurrent_deque<std::shared_ptr<Guest>> _queue;
 
     // concurrent_deque<std::shared_ptr<Guest>> _queue;
 };
