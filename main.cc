@@ -11,8 +11,8 @@
 
 #include <memory>
 #include <string>
-#include <iostream>
 #include <thread>
+#include <iostream>
 
 int main(void) {
 

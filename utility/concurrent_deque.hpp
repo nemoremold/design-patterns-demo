@@ -1,5 +1,5 @@
-#ifndef __CONCURRENT_DEQUE_
-#define __CONCURRENT_DEQUE_
+#ifndef _CONCURRENT_DEQUE_HPP_
+#define _CONCURRENT_DEQUE_HPP_
 
 #include "list.hpp"
 #include <mutex>
@@ -52,8 +52,6 @@ public:
         std::lock_guard<std::mutex> locker(m_mutex);
         m_queue.pop_front();
     }
-
-
 
 private:
     dp::list<T> m_queue;                  
