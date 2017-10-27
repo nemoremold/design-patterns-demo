@@ -11,15 +11,15 @@
 #include "service_line.hpp"
 #include "service_platform.hpp"
 
-#include <stdarg.h>
+#include <list>
 #include <memory>
 #include <string>
-#include <iostream>
 #include <thread>
-#include <list>
-#include <type_traits>
-#include <stdexcept>
+#include <cstdarg>
 #include <utility>
+#include <iostream>
+#include <stdexcept>
+#include <type_traits>
 
 class Assistant {
 public:
