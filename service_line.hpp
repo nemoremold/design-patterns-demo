@@ -1,15 +1,17 @@
 #ifndef _SERVICE_LINE_HPP_
 #define _SERVICE_LINE_HPP_
 
-#include "person.hpp"
 #include "utility/concurrent_deque.hpp"
-#include <cstdio>
+
+#include "person.hpp"
+
+#include <mutex>
 #include <deque>
+#include <cstdio>
 #include <memory>
 #include <string>
 #include <iostream>
 #include <algorithm>
-#include <mutex>
 
 
 class ServiceLine {
