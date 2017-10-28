@@ -59,7 +59,7 @@ This style guide purpose fully leaves many choices up to you (for example, where
 
 ## Build
 
-Change direction to current project path, make sure you have installed CMake(3.9 or higher).
+Change directory to current project path, make sure you have installed CMake(3.9 or higher) and support C++14(or higher).
 
 ```shell
 mkdir build
