@@ -57,3 +57,15 @@ If you allocate memory (`malloc`, `calloc`), you should free it after use. Your 
 
 This style guide purpose fully leaves many choices up to you (for example, where the curly braces go, whether one-line “`if`” statements need braces, how far to indent each level). It is important that, whatever choices you make, you remain consistent about them. Nothing is more distracting to someone reading your code than random style changes.
 
+## Build
+
+Change directory to current project path, make sure you have installed CMake(3.9 or higher) and support C++14(or higher).
+
+```shell
+mkdir build
+cd build
+cmake ..
+make
+./bin/main
+```
+
