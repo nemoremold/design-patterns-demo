@@ -58,9 +58,9 @@ public:
     }
 
     void log(std::string content) {
-        Log &log = Log::Instance();
-        log.addNew(content);
-        log.showAll();
+        Log *log = Log::getInstance();
+        log->addNew(content);
+        log->showAll();
     }
 
     void multiThreading(size_t count, ...) {
